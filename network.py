@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-This script creates the mininet topology, runs a version of the server and
+This script creates the network topology, runs a version of the server and
 client, and logs the packets passing through the switch.
 """
 
@@ -11,11 +11,11 @@ import time
 import sys
 import os
 
-from mininet.topo import Topo
-from mininet.node import CPULimitedHost
-from mininet.link import TCLink
-from mininet.net import Mininet
-from mininet.cli import CLI
+from network.topo import Topo
+from network.node import CPULimitedHost
+from network.link import TCLink
+from network.net import network
+from network.cli import CLI
 
 # Check for root permissions.
 if os.geteuid() != 0:
@@ -28,8 +28,8 @@ parser.add_argument('--delay', type=float, help="Link propagation delay (ms)", d
 parser.add_argument('--bandwith', type=float, help="Bandwidth of network links (Mb/s)", default=1000)
 parser.add_argument('--queuesize', type=int, help="Max buffer size of network interface in packets", default=100)
 parser.add_argument('--client', type=str, choices=['kernel', 'opt-ack', 'ack-division', 'dup-ack'], help='The client type to use.', default='kernel')
-parser.add_argument('--server', type=str, choices=['lwip-vanilla', 'lwip-defense'], help='The server type to use.', default='kernel')
-parser.add_argument('--cli', help='Instead of running the server and client, open a Mininet CLI.', action='store_true')
+parser.add_argument('--server', type=str, choices=['lwip-vanilla', 'lwip-defense'], help='The server type to use.', default='lwip-vanilla')
+parser.add_argument('--cli', help='Instead of running the server and client, open a network CLI.', action='store_true')
 args = parser.parse_args()
 
 class ClientServerTopo(Topo):
@@ -44,8 +44,8 @@ class ClientServerTopo(Topo):
 if __name__ == "__main__":
     
     os.system('mkdir -p captures')
-    net = Mininet(topo=ClientServerTopo(), host=CPULimitedHost, link=TCLink)
-    print "Starting mininet network..."
+    net = network(topo=ClientServerTopo(), host=CPULimitedHost, link=TCLink)
+    print "Starting network network..."
     net.start()
     net.pingAll()
 
@@ -83,7 +83,7 @@ if __name__ == "__main__":
 
         time.sleep(5.0)
 
-        print "Stopping mininet network..."
+        print "Stopping network network..."
         tcpdump.send_signal(signal.SIGINT)
         server.send_signal(signal.SIGINT)
         client.send_signal(signal.SIGINT)
