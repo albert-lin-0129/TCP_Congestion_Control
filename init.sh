@@ -14,17 +14,11 @@ mn -c
 
 echo "Generating network environment..."
 
-# Run the kernel server against various attackers.
-python mininet.py --server=kernel --client=kernel
-python mininet.py --server=kernel --client=opt-ack
-python mininet.py --server=kernel --client=dup-ack
-python mininet.py --server=kernel --client=ack-division
-
 # Run the vanilla LWIP server against various attackers.
-python mininet.py --server=lwip --client=kernel
-python mininet.py --server=lwip --client=opt-ack
-python mininet.py --server=lwip --client=dup-ack
-python mininet.py --server=lwip --client=ack-division
+python mininet.py --server=lwip-vanilla --client=kernel
+python mininet.py --server=lwip-vanilla --client=opt-ack
+python mininet.py --server=lwip-vanilla --client=dup-ack
+python mininet.py --server=lwip-vanilla --client=ack-division
 
 # Run the defended LWIP server against the attackers.
 python mininet.py --server=lwip-defense --client=kernel

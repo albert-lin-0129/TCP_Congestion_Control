@@ -28,7 +28,7 @@ parser.add_argument('--delay', type=float, help="Link propagation delay (ms)", d
 parser.add_argument('--bandwith', type=float, help="Bandwidth of network links (Mb/s)", default=1000)
 parser.add_argument('--queuesize', type=int, help="Max buffer size of network interface in packets", default=100)
 parser.add_argument('--client', type=str, choices=['kernel', 'opt-ack', 'ack-division', 'dup-ack'], help='The client type to use.', default='kernel')
-parser.add_argument('--server', type=str, choices=['kernel', 'lwip', 'lwip-defense'], help='The server type to use.', default='kernel')
+parser.add_argument('--server', type=str, choices=['lwip-vanilla', 'lwip-defense'], help='The server type to use.', default='kernel')
 parser.add_argument('--cli', help='Instead of running the server and client, open a Mininet CLI.', action='store_true')
 args = parser.parse_args()
 
@@ -61,12 +61,10 @@ if __name__ == "__main__":
     if not args.cli:
         tcpdump = net.get('client').popen('tcpdump -w captures/%s-%s.pcap' % (args.client, args.server))
 
-        if args.server == 'kernel':
-            server = server_node.popen('python server/kernel-server.py --port %d' % port)
-        elif args.server == 'lwip':
-            server = server_node.popen('sh server/lwip-defense-server.sh')
-        elif args.server == 'lwip-defended':
+        if args.server == 'lwip-vanilla':
             server = server_node.popen('sh server/lwip-vanilla-server.sh')
+        elif args.server == 'lwip-defense':
+            server = server_node.popen('sh server/lwip-defense-server.sh')
         else:
             raise "Unknown server type %s." % args.server
 
@@ -81,7 +79,7 @@ if __name__ == "__main__":
         elif args.client == 'dup-ack':
             client = client_node.popen("python attackers/dup-ack.py --host %s --dport %d" % (server_ip, port))
         else:
-            raise "Unkown client type %s." % args.client
+            raise "Unknown client type %s." % args.client
 
         time.sleep(5.0)
 
