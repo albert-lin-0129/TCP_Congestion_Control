@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-This file implements the Optimal Ack attacker.
+This file implements the Duplication ACK attack.
 """
 
 import argparse
@@ -21,16 +21,17 @@ if __name__ == "__main__":
     print "Making connection to %s from port %d." % (args.host, args.sport)
     print "Starting three-way handshake..."
     ip_header = IP(dst=args.host) # An IP header that will take packets to the target machine.
-    seq_no = INIT_SEQ_NO # Our starting sequence number (not really used since we don't send data).
+    seq_no = INIT_SEQ_NO # Our starting sequence number 
     window = WIN_SIZE # Advertise a large window size.
 
     syn = ip_header / TCP(window=window, sport=args.sport, dport=args.dport, flags='S', seq=seq_no) # Construct a SYN packet.
-    synack = sr1(syn) # Send the SYN packet and recieve a SYNACK
+    synack = sr1(syn) # Send the SYN packet and receive a SYNACK
 
     ack = ip_header / TCP(window=window, sport=args.sport, dport=args.dport, flags='A', ack=synack.seq + 1, seq=(seq_no + 1)) # ACK the SYNACK
 
     socket = conf.L2socket(iface='client-eth0')
     
+    # Send duplicat ACKs
     def handle_packet(data):
         data = data.payload.payload
         
