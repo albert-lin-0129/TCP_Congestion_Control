@@ -11,11 +11,11 @@ import time
 import sys
 import os
 
-from network.topo import Topo
-from network.node import CPULimitedHost
-from network.link import TCLink
-from network.net import network
-from network.cli import CLI
+from mininet.topo import Topo
+from mininet.node import CPULimitedHost
+from mininet.link import TCLink
+from mininet.net import Mininet
+from mininet.cli import CLI
 
 # Check for root permissions.
 if os.geteuid() != 0:
@@ -44,7 +44,7 @@ class ClientServerTopo(Topo):
 if __name__ == "__main__":
     
     os.system('mkdir -p captures')
-    net = network(topo=ClientServerTopo(), host=CPULimitedHost, link=TCLink)
+    net = Mininet(topo=ClientServerTopo(), host=CPULimitedHost, link=TCLink)
     print "Starting network network..."
     net.start()
     net.pingAll()
