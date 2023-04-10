@@ -27,4 +27,4 @@ python network.py --server=lwip-defense --client=ack-division
 python network.py --server=lwip-defense --client=dup-ack
 
 echo "Creating graphs..."
-python create_graphs.py
+python draw_graphs.py
